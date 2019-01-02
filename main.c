@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	if(argc == 1 || (argc == 2 && isfile)) {
-		printf("usage:\n    %s -f file ...\n    %s string ...\n", argv[0], argv[0]);
+		fprintf(stderr, "usage:\n    %s -f file ...\n    %s string ...\n", argv[0], argv[0]);
 		return 1;
 	}
 	
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 		for(n=2; n<argc; n++) {
 			fp = fopen(argv[n], "rb");
 			if(fp == NULL) {
-				printf("md5(%s) = errno(%d), error(%s)\n", argv[n], errno, strerror(errno));
+				fprintf(stderr, "File %s not exists, errno = %d, error = %s\n", argv[n], errno, strerror(errno));
 				continue;
 			}
 			
@@ -47,11 +47,11 @@ int main(int argc, char *argv[]) {
 			
 			MD5Final(&md5, decrypt);
 
-			printf("md5(%s) = ", argv[n]);
 			for(i=0; i<16; i++) {
 				printf("%02x", decrypt[i]);  //02x前需要加上 %
 			}
-			printf("\n");
+			
+			printf("  %s\n", argv[n]);
 		}
 	} else {
 		for(n=1; n<argc; n++) {
@@ -59,11 +59,11 @@ int main(int argc, char *argv[]) {
 			MD5Update(&md5, argv[n], strlen(argv[n]));
 			MD5Final(&md5, decrypt);
 
-			printf("md5(%s) = ", argv[n]);
 			for(i=0; i<16; i++) {
 				printf("%02x", decrypt[i]);  //02x前需要加上 %
 			}
-			printf("\n");
+			
+			printf("  %s\n", argv[n]);
 		}
 	}
 
